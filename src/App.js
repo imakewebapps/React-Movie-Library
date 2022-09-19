@@ -1,33 +1,47 @@
-import { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { React, useEffect, useState } from "react";
+import searchIcon from './search.svg';
+import MovieCard from './MovieCard';
+const API_URL = "https://www.omdbapi.com/?apikey=d165bfb1&";
+const App = () => {
+    const [movies, setMovies] = useState([]);
+    const searchMovies = async (title) => {
+        const reponse = await fetch(`${API_URL}s=${title}`);
+        const data = await reponse.json();
+        setMovies(data.Search);
+    }
+    useEffect(() => {
+        searchMovies("Batman")
+    }, []);
 
-
-const  Person = (props) => {
-  console.log(props);
-  return(
-    <>
-      <h1>fname : {props.data.name}</h1>
-      <h2>lname : {props.data.lname} </h2>
-      <h3>Age : {props.data.age} </h3>
-      </>
-  )
-}
-
-function App() {
-  const [counter, setCounter] =  useState(0);
-  const person = {name : "John", lname:"Doe", age : 36};
-  useEffect(()=>{
-    console.log("Counter"+counter)
-  },[counter])
 
     return (
-      <div className="App">
-        <Person data={person} />
-        <button onClick={()=> setCounter((prevCount)=> prevCount-1)}>-</button>
-        <h1>{counter}</h1>
-        <button onClick={()=>setCounter((nextState)=> nextState+1)}>+</button>
-      </div>
-    );
-  }
+
+
+        <div className="app">
+            <h1>Movie land</h1>
+            <div className="search">
+                <input placeholder="Search Movies" value="superman" onChange={() => { }} />
+                <img src={searchIcon} alt="search" onClick={() => { }} />
+            </div>
+            {
+                (movies.length > 0)
+                    ? (
+                        <div className="container">
+                            {
+                                movies.map(function(movie){
+                                return (<MovieCard movie={movie} />)
+                                }
+                                )}
+                        </div>
+                    )
+                    :
+                    (
+                        <div className="empty">
+                            <h2> No Movies Found </h2>
+                        </div>
+                    )
+            }
+        </div>
+    )
+};
 export default App;
